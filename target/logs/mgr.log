@@ -1,0 +1,30 @@
+2023-03-23 22:23:01.410 [${sys:realIP}] INFO [main][StartupInfoLogger.java:55] - Starting App v1.0-SNAPSHOT using Java 1.8.0_362 on DESKTOP-TTEHCC5 with PID 17248 (F:\devcode\gptmgr-deliver\target\MGR.jar started by 19344 in F:\devcode\gptmgr-deliver\target)
+2023-03-23 22:23:01.439 [${sys:realIP}] INFO [main][SpringApplication.java:631] - No active profile set, falling back to 1 default profile: "default"
+2023-03-23 22:23:02.480 [${sys:realIP}] INFO [main][TomcatWebServer.java:108] - Tomcat initialized with port(s): 8080 (http)
+2023-03-23 22:23:02.587 [${sys:realIP}] INFO [main][ServletWebServerApplicationContext.java:292] - Root WebApplicationContext: initialization completed in 1109 ms
+2023-03-23 22:23:03.303 [${sys:realIP}] WARN [main][ThymeleafAutoConfiguration.java:103] - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2023-03-23 22:23:03.441 [${sys:realIP}] WARN [main][AbstractApplicationContext.java:591] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.PortInUseException: Port 8080 is already in use
+2023-03-23 22:23:03.479 [${sys:realIP}] INFO [main][ConditionEvaluationReportLoggingListener.java:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-03-23 22:23:03.498 [${sys:realIP}] ERROR [main][LoggingFailureAnalysisReporter.java:40] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2023-03-23 22:24:04.281 [${sys:realIP}] INFO [main][StartupInfoLogger.java:55] - Starting App v1.0-SNAPSHOT using Java 1.8.0_362 on DESKTOP-TTEHCC5 with PID 18536 (F:\devcode\gptmgr-deliver\target\MGR.jar started by 19344 in F:\devcode\gptmgr-deliver\target)
+2023-03-23 22:24:04.287 [${sys:realIP}] INFO [main][SpringApplication.java:631] - No active profile set, falling back to 1 default profile: "default"
+2023-03-23 22:24:05.187 [${sys:realIP}] INFO [main][TomcatWebServer.java:108] - Tomcat initialized with port(s): 8083 (http)
+2023-03-23 22:24:05.267 [${sys:realIP}] INFO [main][ServletWebServerApplicationContext.java:292] - Root WebApplicationContext: initialization completed in 947 ms
+2023-03-23 22:24:05.898 [${sys:realIP}] WARN [main][ThymeleafAutoConfiguration.java:103] - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2023-03-23 22:24:06.057 [${sys:realIP}] INFO [main][TomcatWebServer.java:220] - Tomcat started on port(s): 8083 (http) with context path '/GPTMGR'
+2023-03-23 22:24:06.068 [${sys:realIP}] INFO [main][StartupInfoLogger.java:61] - Started App in 2.059 seconds (JVM running for 2.658)
