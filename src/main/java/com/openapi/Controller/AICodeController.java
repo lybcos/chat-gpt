@@ -31,6 +31,12 @@ public class AICodeController {
     @Autowired
     CodeUserService _codeUserService;
 
+    /**
+     * 获取我的邀请码
+     * @param openId
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/getUser")
     public Return getUser(String openId) throws Exception {
 
@@ -119,6 +125,11 @@ public class AICodeController {
         }
     }
 
+    /**
+     * 输入别人分享的邀请码，进行保存及其它操作
+     * @param params
+     * @return
+     */
     @PostMapping("/inputCode")
     public Return inputCode(@RequestBody Map<String,String> params) {
         String openId = params.get("openId");
@@ -151,7 +162,7 @@ public class AICodeController {
 
         String apikey = String.valueOf(postQuestion.get("apikey"));
 
-        return _codeUserService.doAsk(apikey,openId,hint,question);
+        return _codeUserService.doAsk1(openId,hint,question);
     }
 
 
@@ -184,7 +195,7 @@ public class AICodeController {
         }
     }
     // 假接口,用于调试
-    @PostMapping("/doDummy")
+    @PostMapping("/ ")
     public Return doDummy(@RequestBody Map<String,String> postQuestion) {
         String openId = postQuestion.get("openId");
         String question = postQuestion.get("question");

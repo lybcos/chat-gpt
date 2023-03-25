@@ -16,9 +16,9 @@ public class CodeUserQuota {
 
     private String openid;
 
-    private int cnt;
+    private int cnt;//使用次数
 
-    private int maxcnt;
+    private int maxcnt;//最大使用次数
 
 
 }

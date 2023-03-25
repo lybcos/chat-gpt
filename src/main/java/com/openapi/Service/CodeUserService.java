@@ -1,6 +1,7 @@
 package com.openapi.Service;
 
 import java.io.IOException;
+import java.net.Proxy;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -15,6 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson2.JSON;
+import com.openapi.Model.*;
+import com.plexpt.chatgpt.ChatGPT;
+import com.plexpt.chatgpt.ChatGPTStream;
+import com.plexpt.chatgpt.entity.chat.ChatCompletion;
+import com.plexpt.chatgpt.entity.chat.ChatCompletionResponse;
+import com.plexpt.chatgpt.entity.chat.Message;
+import com.plexpt.chatgpt.listener.ConsoleStreamListener;
+import com.plexpt.chatgpt.util.Proxys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +40,13 @@ import com.openapi.Dao.CodeUserMapper;
 import com.openapi.Dao.CodeUserQuotaMapper;
 import com.openapi.Dao.InviteCodeMapper;
 import com.openapi.Database.TgDataSourceConfig;
-import com.openapi.Model.ChatHist;
-import com.openapi.Model.CodeUser;
-import com.openapi.Model.CodeUserQuota;
-import com.openapi.Model.InviteCode;
 import com.openapi.tools.OkHttpClientUtil.OkHttpTools;
 //import com.openapi.tools.SendAlarmTools;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -69,105 +76,105 @@ public class CodeUserService {
     ChatHistMapper _chatHistMapper;
 
 
-    public int save(CodeUser bizUser){
+    public int save(CodeUser bizUser) {
 
         return _codeUserMapper.upsert(bizUser);
     }
 
-    public CodeUser getCodeUser(String id){
+    public CodeUser getCodeUser(String id) {
         CodeUser user = _codeUserMapper.selectById(id);
         return user;
     }
 
-    public int deleteByOpenId(String openId){
+    public int deleteByOpenId(String openId) {
         return _codeUserMapper.deleteByOpenId(openId);
     }
 
-    public CodeUser getCodeUserByOpenId(String openId){
+    public CodeUser getCodeUserByOpenId(String openId) {
         return _codeUserMapper.getCodeUserByOpenId(openId);
     }
 
-    public CodeUser getCodeUserByInviteCode(String invitecode){
+    public CodeUser getCodeUserByInviteCode(String invitecode) {
         return _codeUserMapper.getCodeUserByInviteCode(invitecode);
     }
 
-    public CodeUserQuota getQuota(String openId){
+    public CodeUserQuota getQuota(String openId) {
         CodeUserQuota quota = _codeUserQuotaMapper.getCodeUserQuotaByOpenId(openId);
-        if(quota == null){
+        if (quota == null) {
             // 没有先初始化
             quota = new CodeUserQuota();
             quota.setOpenid(openId);
             quota.setCnt(1);
             quota.setMaxcnt(5);
-            if(_codeUserQuotaMapper.upsert(quota) > 0){
+            if (_codeUserQuotaMapper.upsert(quota) > 0) {
                 return quota;
-            }else{
+            } else {
                 quota.setCnt(9999999);
                 return quota;
             }
-        }else{
+        } else {
             return _codeUserQuotaMapper.getCodeUserQuotaByOpenId(openId);
         }
     }
 
-    public int incrQuota(String openId){
-        return incrQuota(openId,1);
+    public int incrQuota(String openId) {
+        return incrQuota(openId, 1);
     }
 
-    public int incrQuota(String openId,int addCnt){
+    public int incrQuota(String openId, int addCnt) {
 
         CodeUserQuota quota = getQuota(openId);
-        quota.setCnt(quota.getCnt()+addCnt);
+        quota.setCnt(quota.getCnt() + addCnt);
         quota.setUpdatetime(new Date());
         return _codeUserQuotaMapper.upsert(quota);
     }
 
-    public int incrMaxQuota(String openId,int addCnt){
+    public int incrMaxQuota(String openId, int addCnt) {
 
         CodeUserQuota quota = getQuota(openId);
-        quota.setMaxcnt(quota.getMaxcnt()+addCnt);
+        quota.setMaxcnt(quota.getMaxcnt() + addCnt);
         // 不能更新updatetime,避免计算cnt错误
         // quota.setUpdatetime(new Date());
         return _codeUserQuotaMapper.upsert(quota);
     }
 
-    public int saveQuota(CodeUserQuota quota){
+    public int saveQuota(CodeUserQuota quota) {
         quota.setUpdatetime(new Date());
         return _codeUserQuotaMapper.upsert(quota);
     }
 
     @Transactional
-    public Return inputCode(String consumeopenId,String code){
+    public Return inputCode(String consumeopenId, String code) {
 
 
-        InviteCode iv = _inviteCodeMapper.getByCode(code,consumeopenId);
-        if (iv !=null) {
+        InviteCode iv = _inviteCodeMapper.getByCode(code, consumeopenId);
+        if (iv != null) {
             // 好友已输入过
             return Return.FAIL(BasicCode.data_exist);
         }
 
         CodeUser produceuser = getCodeUserByInviteCode(code);
-        if(produceuser==null){
+        if (produceuser == null) {
             // code不存在
-            logger.info("code {} 没有user记录" , code);
+            logger.info("code {} 没有user记录", code);
             return Return.FAIL(BasicCode.data_not_found);
         }
         //
-        if(consumeopenId.equals(produceuser.getOpenid())){
-            logger.info("code {} 不能自己邀请自己" , code);
+        if (consumeopenId.equals(produceuser.getOpenid())) {
+            logger.info("code {} 不能自己邀请自己", code);
             return Return.FAIL(BasicCode.data_not_found);
         }
 
         CodeUser consumeuser = getCodeUserByOpenId(consumeopenId);
-        if(consumeuser==null){
-            logger.info("openid {} 没有user记录" , consumeopenId);
+        if (consumeuser == null) {
+            logger.info("openid {} 没有user记录", consumeopenId);
             return Return.FAIL(BasicCode.data_not_found);
         }
 
         //不超过3次
         int total = _inviteCodeMapper.count(code);
-        if(total >=3) {
-            logger.info("code {} 超过3次" , code);
+        if (total >= 3) {
+            logger.info("code {} 超过3次", code);
             return Return.FAIL(BasicCode.quota_over_limit);
         }
 
@@ -177,21 +184,81 @@ public class CodeUserService {
         iv.setProduceopenid(produceuser.getOpenid());
 
         int cnt = _inviteCodeMapper.insert(iv);
-        if(cnt < 0){
+        if (cnt < 0) {
             return Return.FAIL(BasicCode.error);
         }
 
         // 双方各加次数
-        incrMaxQuota(consumeopenId,10);
-        incrMaxQuota(produceuser.getOpenid(),10);
+        incrMaxQuota(consumeopenId, 10);
+        incrMaxQuota(produceuser.getOpenid(), 10);
 
         return Return.SUCCESS(BasicCode.success);
 
     }
 
-    public Return doAsk(String apikey ,String openId,Object hint, String question){
+    public Return doAsk1(String openId, Object hint, String question) {
+        try {
+            //国内需要代理 国外不需要
+            Proxy proxy = Proxys.http("127.0.0.1", 15732);
 
-        if(Strings.isNullOrEmpty(apikey) || "null".equals(apikey)){
+            ChatGPT chatGPT = ChatGPT.builder()
+                    .apiKey("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")
+                    .proxy(proxy)
+                    .timeout(900)
+                    .apiHost("https://api.openai.com/") //反向代理地址
+                    .build()
+                    .init();
+
+//                Message system = Message.ofSystem("你现在是一个诗人，专门写七言绝句");
+            Message message = Message.of(question);
+
+            ChatCompletion chatCompletion = ChatCompletion.builder()
+                    .model(ChatCompletion.Model.GPT_3_5_TURBO.getName())
+                    .messages(Arrays.asList(message))
+                    .maxTokens(3000)
+                    .temperature(0.9)
+                    .build();
+            ChatCompletionResponse response = chatGPT.chatCompletion(chatCompletion);
+            Message res = response.getChoices().get(0).getMessage();
+            System.out.println(res);
+            logger.info("api接口返回:{}", res);
+//
+//            Return ret_resp = JsonConvert.toObject(res, Return.class);
+
+            if (res == null || res.getContent() == null) {
+//                if (str.contains("insufficient_quota")) {
+//                    logger.error("{} 余额不足", apikey);
+////                    SendAlarmTools.sendAlarm(apikey.concat("余额不足"));
+//                }
+
+                ChatHist answer = new ChatHist();
+                answer.setOpenid(openId);
+                answer.setQuestion(question);
+                answer.setResult("服务负载过高,请稍后再试");
+                _chatHistMapper.insert(answer);
+            } else {
+//                String text = String.valueOf(ret_resp.get_data());
+                String text = res.getContent();
+                ChatHist answer = new ChatHist();
+                answer.setOpenid(openId);
+                answer.setQuestion(question);
+                answer.setResult(text);
+                _chatHistMapper.insert(answer);
+                return Return.SUCCESS(BasicCode.success).data(text);
+            }
+
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+            logger.error("请求异常", openId);
+        }
+        return Return.FAIL(BasicCode.error);
+
+    }
+
+    public Return doAsk(String apikey, String openId, Object hint, String question) {
+
+        if (Strings.isNullOrEmpty(apikey) || "null".equals(apikey)) {
             apikey = getKey();
         }
 
@@ -202,41 +269,41 @@ public class CodeUserService {
 //            return checkQuotaRet;
 //        }
 
-        try{
+        try {
 
 
             Map head = new HashMap();
             Map chatParam = new HashMap();
-            chatParam.put("model","gpt-3.5-turbo");
+            chatParam.put("model", "gpt-3.5-turbo");
 
             List message = new ArrayList();
-            if(hint!=null){
-                message.add(JsonConvert.toObject(JsonConvert.toJson(hint),List.class));
+            if (hint != null) {
+                message.add(JsonConvert.toObject(JsonConvert.toJson(hint), List.class));
             }
 
             Map content = new HashMap();
-            content.put("role","user");
-            content.put("content",question);
+            content.put("role", "user");
+            content.put("content", question);
 
             message.add(content);
 
-            chatParam.put("question",message);
-            chatParam.put("apikey",apikey);
+            chatParam.put("question", message);
+            chatParam.put("apikey", apikey);
 
-            logger.info("chatgpt接口参数:{}",chatParam);
+            logger.info("chatgpt接口参数:{}", chatParam);
 
             String url = _tgDataSourceConfig.getApiserver().concat("/GPTMGR/aicode/doRequest");
 
 
-            String str = OkHttpTools.post(OkHttpTools.MEDIA_TYPE_JSON,url,chatParam);
+            String str = OkHttpTools.post(OkHttpTools.MEDIA_TYPE_JSON, url, chatParam);
 
-            logger.info("api接口返回:{}",str);
+            logger.info("api接口返回:{}", str);
 
-            Return ret_resp = JsonConvert.toObject(str,Return.class);
+            Return ret_resp = JsonConvert.toObject(str, Return.class);
 
-            if(!ret_resp.is_success()){
-                if(str.contains("insufficient_quota")){
-                    logger.error("{} 余额不足",apikey);
+            if (!ret_resp.is_success()) {
+                if (str.contains("insufficient_quota")) {
+                    logger.error("{} 余额不足", apikey);
 //                    SendAlarmTools.sendAlarm(apikey.concat("余额不足"));
                 }
 
@@ -245,7 +312,7 @@ public class CodeUserService {
                 answer.setQuestion(JsonConvert.toJson(chatParam));
                 answer.setResult("服务负载过高,请稍后再试");
                 _chatHistMapper.insert(answer);
-            }else{
+            } else {
                 String text = String.valueOf(ret_resp.get_data());
 
                 ChatHist answer = new ChatHist();
@@ -257,7 +324,7 @@ public class CodeUserService {
             }
 
 
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             logger.error("请求异常", openId);
         }
@@ -299,11 +366,11 @@ public class CodeUserService {
 
 
             Request request = new Request.Builder()
-                .url(url)
-                .headers(headers)
-                //.header("authorization","Bearer "+ "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")
-                .post(body)
-                .build();
+                    .url(url)
+                    .headers(headers)
+                    //.header("authorization","Bearer "+ "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")
+                    .post(body)
+                    .build();
 
             logger.info("{}的问题:{}",chatParam);
             try (Response response = client.newCall(request).execute()) {
@@ -348,7 +415,7 @@ public class CodeUserService {
         return calendar.getTimeInMillis();
     }
 
-    private String getKey(){
+    private String getKey() {
         String str_keys = _tgDataSourceConfig.getApikey();
         List<String> keys = Arrays.asList(str_keys.split(","));
         Collections.shuffle(keys);
@@ -358,21 +425,21 @@ public class CodeUserService {
 
     private static OkHttpClient getUnsafeOkHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
         // 创建一个信任所有证书的 TrustManager
-        final TrustManager[] trustAllCerts = new TrustManager[] {
-            new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                }
+        final TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    }
 
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                }
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                    }
 
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
                 }
-            }
         };
 
         // 创建一个 SSLContext，并指定信任所有证书
@@ -382,8 +449,8 @@ public class CodeUserService {
         // 创建一个 OkHttpClient，并指定 SSLContext
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(30, TimeUnit.SECONDS);
-        builder.connectTimeout(10,TimeUnit.SECONDS);
-        builder.writeTimeout(30,TimeUnit.SECONDS);
+        builder.connectTimeout(10, TimeUnit.SECONDS);
+        builder.writeTimeout(30, TimeUnit.SECONDS);
         builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustAllCerts[0]);
 
         return builder.build();

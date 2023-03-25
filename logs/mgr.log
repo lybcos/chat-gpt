@@ -1,0 +1,38 @@
+2023-03-25 12:07:34.577 [${sys:realIP}] INFO [main][StartupInfoLogger.java:55] - Starting App using Java 1.8.0_362 on DESKTOP-TTEHCC5 with PID 10540 (F:\devcode\gptmgr-deliver\target\classes started by 19344 in F:\devcode\gptmgr-deliver)
+2023-03-25 12:07:34.594 [${sys:realIP}] INFO [main][SpringApplication.java:631] - No active profile set, falling back to 1 default profile: "default"
+2023-03-25 12:07:35.239 [${sys:realIP}] INFO [main][TomcatWebServer.java:108] - Tomcat initialized with port(s): 8080 (http)
+2023-03-25 12:07:35.326 [${sys:realIP}] INFO [main][ServletWebServerApplicationContext.java:292] - Root WebApplicationContext: initialization completed in 701 ms
+2023-03-25 12:07:35.808 [${sys:realIP}] WARN [main][ThymeleafAutoConfiguration.java:103] - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2023-03-25 12:07:35.886 [${sys:realIP}] INFO [main][TomcatWebServer.java:220] - Tomcat started on port(s): 8080 (http) with context path '/GPTMGR'
+2023-03-25 12:07:35.886 [${sys:realIP}] INFO [main][StartupInfoLogger.java:61] - Started App in 1.648 seconds (JVM running for 2.834)
+2023-03-25 12:09:41.111 [${sys:realIP}] INFO [main][StartupInfoLogger.java:55] - Starting App using Java 1.8.0_362 on DESKTOP-TTEHCC5 with PID 22132 (F:\devcode\gptmgr-deliver\target\classes started by 19344 in F:\devcode\gptmgr-deliver)
+2023-03-25 12:09:41.111 [${sys:realIP}] INFO [main][SpringApplication.java:631] - No active profile set, falling back to 1 default profile: "default"
+2023-03-25 12:09:41.725 [${sys:realIP}] INFO [main][TomcatWebServer.java:108] - Tomcat initialized with port(s): 8080 (http)
+2023-03-25 12:09:41.804 [${sys:realIP}] INFO [main][ServletWebServerApplicationContext.java:292] - Root WebApplicationContext: initialization completed in 662 ms
+2023-03-25 12:09:42.187 [${sys:realIP}] WARN [main][ThymeleafAutoConfiguration.java:103] - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2023-03-25 12:09:42.268 [${sys:realIP}] INFO [main][TomcatWebServer.java:220] - Tomcat started on port(s): 8080 (http) with context path '/GPTMGR'
+2023-03-25 12:09:42.275 [${sys:realIP}] INFO [main][StartupInfoLogger.java:61] - Started App in 1.414 seconds (JVM running for 2.434)
+2023-03-25 12:14:43.822 [${sys:realIP}] INFO [http-nio-8080-exec-2][FrameworkServlet.java:525] - Initializing Servlet 'dispatcherServlet'
+2023-03-25 12:14:43.823 [${sys:realIP}] INFO [http-nio-8080-exec-2][FrameworkServlet.java:547] - Completed initialization in 1 ms
+2023-03-25 12:14:56.819 [${sys:realIP}] INFO [http-nio-8080-exec-2][CodeUserService.java:224] - api接口返回:Message(role=assistant, content=鲁迅是一位著名的中国现代文学家、思想家、翻译家、杂志编辑和革命家，他是20世纪中国文化和思想领域的重要人物之一。鲁迅的真名是周树人，他的代表作品有《呐喊》、《彷徨》、《狂人日记》等。他的文学作品具有强烈的现实主义色彩，揭示了中国社会和人民遭受的种种苦难和不幸，对于中国现代文学和思想的发展产生了深远的影响。)
+2023-03-25 12:47:48.653 [${sys:realIP}] WARN [http-nio-8080-exec-3][AbstractHandlerExceptionResolver.java:208] - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
+2023-03-25 12:48:28.967 [${sys:realIP}] INFO [main][StartupInfoLogger.java:55] - Starting App using Java 1.8.0_362 on DESKTOP-TTEHCC5 with PID 9844 (F:\devcode\gptmgr-deliver\target\classes started by 19344 in F:\devcode\gptmgr-deliver)
+2023-03-25 12:48:28.983 [${sys:realIP}] INFO [main][SpringApplication.java:631] - No active profile set, falling back to 1 default profile: "default"
+2023-03-25 12:48:29.620 [${sys:realIP}] INFO [main][TomcatWebServer.java:108] - Tomcat initialized with port(s): 8080 (http)
+2023-03-25 12:48:29.687 [${sys:realIP}] INFO [main][ServletWebServerApplicationContext.java:292] - Root WebApplicationContext: initialization completed in 660 ms
+2023-03-25 12:48:30.125 [${sys:realIP}] WARN [main][ThymeleafAutoConfiguration.java:103] - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2023-03-25 12:48:30.201 [${sys:realIP}] INFO [main][TomcatWebServer.java:220] - Tomcat started on port(s): 8080 (http) with context path '/GPTMGR'
+2023-03-25 12:48:30.207 [${sys:realIP}] INFO [main][StartupInfoLogger.java:61] - Started App in 1.461 seconds (JVM running for 2.363)
+2023-03-25 12:48:38.791 [${sys:realIP}] INFO [http-nio-8080-exec-2][FrameworkServlet.java:525] - Initializing Servlet 'dispatcherServlet'
+2023-03-25 12:48:38.792 [${sys:realIP}] INFO [http-nio-8080-exec-2][FrameworkServlet.java:547] - Completed initialization in 1 ms
+2023-03-25 12:49:29.894 [${sys:realIP}] WARN [http-nio-8080-exec-4][AbstractHandlerExceptionResolver.java:208] - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' not supported]
+2023-03-25 12:56:37.401 [${sys:realIP}] WARN [http-nio-8080-exec-1][AbstractHandlerExceptionResolver.java:208] - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
+2023-03-25 12:58:36.722 [${sys:realIP}] INFO [main][StartupInfoLogger.java:55] - Starting App using Java 1.8.0_362 on DESKTOP-TTEHCC5 with PID 6800 (F:\devcode\gptmgr-deliver\target\classes started by 19344 in F:\devcode\gptmgr-deliver)
+2023-03-25 12:58:36.727 [${sys:realIP}] INFO [main][SpringApplication.java:631] - No active profile set, falling back to 1 default profile: "default"
+2023-03-25 12:58:37.362 [${sys:realIP}] INFO [main][TomcatWebServer.java:108] - Tomcat initialized with port(s): 8080 (http)
+2023-03-25 12:58:37.436 [${sys:realIP}] INFO [main][ServletWebServerApplicationContext.java:292] - Root WebApplicationContext: initialization completed in 675 ms
+2023-03-25 12:58:37.815 [${sys:realIP}] WARN [main][ThymeleafAutoConfiguration.java:103] - Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+2023-03-25 12:58:37.897 [${sys:realIP}] INFO [main][TomcatWebServer.java:220] - Tomcat started on port(s): 8080 (http) with context path '/GPTMGR'
+2023-03-25 12:58:37.904 [${sys:realIP}] INFO [main][StartupInfoLogger.java:61] - Started App in 1.446 seconds (JVM running for 2.566)
+2023-03-25 12:59:01.969 [${sys:realIP}] INFO [http-nio-8080-exec-1][FrameworkServlet.java:525] - Initializing Servlet 'dispatcherServlet'
+2023-03-25 12:59:01.970 [${sys:realIP}] INFO [http-nio-8080-exec-1][FrameworkServlet.java:547] - Completed initialization in 1 ms
