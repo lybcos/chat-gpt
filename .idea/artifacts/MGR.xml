@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="gptmgr:jar">
-    <output-path>$PROJECT_DIR$/target</output-path>
+  <artifact type="jar" name="MGR">
+    <output-path>$PROJECT_DIR$/.idea/artifacts</output-path>
     <root id="archive" name="gptmgr.jar">
       <element id="module-output" name="gptmgr" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../../MavenDesponsit/org/springframework/boot/spring-boot-autoconfigure/2.7.6/spring-boot-autoconfigure-2.7.6.jar" path-in-jar="/" />
